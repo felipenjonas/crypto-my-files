@@ -1,3 +1,5 @@
 /.env
 /input.txt
 /node_modules
+/decrypted.txt
+/output.txt
