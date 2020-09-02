@@ -11,29 +11,46 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
+function decrypt() {
+    rl.question('to decrypt the file you must enter the secret key:  ', (answer) => {
+        if (answer === process.env.KEY) {
+            fs.exists('output.txt', (exists) => {
+                if (exists == true) {
+                    console.log('\n The file output.txt exist!! The program will proceed the decrypt the file\n')
+                    try {
+                        fs.exists('decrypted.txt', (exists) => {
+                            if (exists == true) {
+                                console.log('The file decrypted.txt already was decrypted!! \n')
+                            } else {
+                                const read = fs.createReadStream('output.txt')
+                                const write = fs.createWriteStream('decrypted.txt')
+                                const cipher = crypto.createCipher(alg, passwd)
 
-rl.question('to decrypt the file you must enter the secret key:  ', (answer) => {
-    if (answer === process.env.KEY) {
-        const read = fs.createReadStream('output.txt')
-        const write = fs.createWriteStream('decrypted.txt')
-        const cipher = crypto.createCipher(alg, passwd)
+                                console.log(` Correct Secret Key, your decrypted file is done! `);
 
-        console.log(` Correct Secret Key, your decrypted file is done! `);
+                                read.pipe(cipher).pipe(write)
 
-        read.pipe(cipher).pipe(write)
-        
-        console.log('Done! SUCCESS')
+                                console.log('Done! SUCCESS DECRYPT!')
 
-        rl.close();
+                                rl.close();
+                            }
+                        });
+                    } catch (err) {
+                        return err
+                    }
+                } else {
+                    console.log('\n The file Output.txt does not exist... You must create it execute the file cryptFile.js with node ')
+                }
+            });
 
-    } else {
-        console.log(`Sorry, The Secret Key is incorrect `);
+        } else {
+            console.log(`Sorry, The Secret Key is incorrect `);
 
-        rl.close();
-    }
+            rl.close();
+        }
+    });
+}
 
-});
-
-
+decrypt()
 
 

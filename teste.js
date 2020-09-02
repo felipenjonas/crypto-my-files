@@ -22,9 +22,9 @@ function verifyExistOutputFile() {
         } else {
             console.log('The file output.txt does not exist... You must create')
         }
+
     });
 }
 
-verifyExistInputFile()
-
+// verifyExistInputFile()
 verifyExistOutputFile()
