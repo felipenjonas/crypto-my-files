@@ -11,6 +11,9 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
+
+rl.stdoutMuted = true;
+
 function decrypt() {
     rl.question('to decrypt the file you must enter the secret key:  ', (answer) => {
         if (answer === process.env.KEY) {
@@ -49,8 +52,41 @@ function decrypt() {
             rl.close();
         }
     });
+
+    // ==================HIDE TERMINAL PASSWORD###1 "password : ****" 
+    // rl._writeToOutput = function _writeToOutput(stringToWrite) {
+    //     if (rl.stdoutMuted)
+    //       rl.output.write("*");
+    //     else
+    //       rl.output.write(stringToWrite);
+    //   };
+
+    //==================HIDE TERMINAL PASSWORD###2 
+      rl._writeToOutput = function _writeToOutput(stringToWrite) {
+        if (rl.stdoutMuted)
+          rl.output.write("\x1B[2K\x1B[200D"+rl.query+"["+((rl.line.length%2==1)?"=-":"-=")+"]");
+        else
+          rl.output.write(stringToWrite);
+      };
+
+
+
+    // ==================HIDE TERMINAL PASSWORD###3
+    // This sequence "\x1B[2K\x1BD" uses two escapes sequences:
+    // Esc[2K: clear entire line.
+    // Esc D: move / scroll window up one line.
+
+        // rl._writeToOutput = function _writeToOutput(stringToWrite) {
+        //     if (rl.stdoutMuted)
+        //         rl.output.write("\x1B[2K\x1B[200D" + rl.query + "[" + ((rl.line.length % 2 == 1) ? "*" : "*") + "]");
+        //     else
+        //         rl.output.write(stringToWrite);
+        // };
 }
 
 decrypt()
+
+// You can clear history with
+rl.history = rl.history.slice(1);
 
 
